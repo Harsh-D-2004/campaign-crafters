@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id             Int            @id @default(autoincrement())
+  businessName   String?
+  productName    String?
+  email          String?
+  description    String?
+  industry       String?
+  websiteUrl     String?
+  targetLocation String?
+  targetAge      String?
+  budget         Float
+  createdAt      DateTime       @default(now())
+  campaigns      Campaign[]
+  campaignUser   CampaignUser[]
+}
+
+model CampaignUser {
+  id             Int      @id @default(autoincrement())
+  businessId     Int
+  name           String?
+  age            Int?
+  phoneNumber    String?
+  location       String?
+  platform       String?
+  adType         String?
+  clickTime      String?
+  conversionRate Float?
+  ctr            Float?
+  status         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  business       Business @relation(fields: [businessId], references: [id])
+}
+
+model Campaign {
+  id              Int       @id @default(autoincrement())
+  businessId      Int
+  reditString     String?
+  whatsappString  String?
+  twitterString  String?
+  startDate       DateTime? @default(now())
+  createdAt       DateTime  @default(now())
+
+  business Business @relation(fields: [businessId], references: [id])
+}
+
+// model CustomerEngagement {
+//   id              Int      @id @default(autoincrement())
+//   businessId      Int
+//   customerEmail   String
+//   interactionType String // e.g., 'lead', 'purchase', 'follow-up'
+//   message         String?
+//   status          String   @default("pending") // e.g., 'pending', 'completed'
+//   createdAt       DateTime @default(now())
+
+//   business Business @relation(fields: [businessId], references: [id])
+// }

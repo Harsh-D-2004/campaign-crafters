@@ -1,0 +1,15 @@
+campaign-crafters-backend/.vscode
+campaign-crafters-backend/node_modules
+campaign-crafters-backend/dist
+campaign-crafters-backend/build
+campaign-crafters-backend/coverage
+campaign-crafters-backend/package-lock.json
+campaign-crafters-backend/.env
+
+campaign-crafters-frontend/.vscode
+campaign-crafters-frontend/node_modules
+campaign-crafters-frontend/dist
+campaign-crafters-frontend/build
+campaign-crafters-backend/coverage
+campaign-crafters-backend/package-lock.json
+campaign-crafters-backend/.env

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Quiz Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+        #credits {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: '#e8f4f8',
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        const game = new Phaser.Game(config);
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questions = [
+            {
+                question: "Which is the oldest railway station in Mumbai?",
+                options: ["Churchgate", "CST (Victoria Terminus)", "Dadar", "Bandra"],
+                correct: 1 // CST is the correct answer
+            },
+            {
+                question: "Which Mumbai beach is famous for its street food stalls?",
+                options: ["Aksa Beach", "Chowpatty Beach", "Juhu Beach", "Versova Beach"],
+                correct: 2 // Juhu Beach is the correct answer
+            },
+            {
+                question: "Which iconic structure in Mumbai was built to commemorate a visit by King George V?",
+                options: ["Haji Ali", "Marine Drive", "Gateway of India", "Sealink"],
+                correct: 2 // Gateway of India is the correct answer
+            },
+            {
+                question: "Which local market in Mumbai is famous for antiques and souvenirs?",
+                options: ["Crawford Market", "Colaba Causeway", "Dadar Market", "Lokhandwala Market"],
+                correct: 1 // Colaba Causeway is the correct answer
+            },
+            {
+                question: "Which is the largest park in Mumbai?",
+                options: ["Hanging Gardens", "Sanjay Gandhi National Park", "Shivaji Park", "Priyadarshini Park"],
+                correct: 1 // Sanjay Gandhi National Park is the correct answer
+            }
+        ];
+
+        function preload() {
+            this.load.image('background', 'https://via.placeholder.com/800x600/2E8B57/FFFFFF?text=Mumbai+Quiz+Game');
+        }
+
+        function create() {
+            // Add background image
+            this.add.image(400, 300, 'background');
+
+            // Display first question
+            displayQuestion.call(this);
+        }
+
+        function displayQuestion() {
+            const questionData = questions[currentQuestionIndex];
+
+            // Clear previous question (if any)
+            if (this.textGroup) {
+                this.textGroup.clear(true, true);
+            }
+
+            // Group to manage question and options
+            this.textGroup = this.add.group();
+
+            // Add question text
+            const questionText = this.add.text(400, 100, questionData.question, {
+                fontSize: '26px',
+                color: '#333',
+                align: 'center',
+                wordWrap: { width: 700 }
+            }).setOrigin(0.5);
+            this.textGroup.add(questionText);
+
+            // Add options as clickable buttons
+            questionData.options.forEach((option, index) => {
+                const optionButton = this.add.text(400, 200 + index * 60, option, {
+                    fontSize: '20px',
+                    color: '#fff',
+                    backgroundColor: '#007BFF',
+                    padding: { x: 10, y: 10 },
+                    align: 'center',
+                    borderRadius: '10px'
+                })
+                .setOrigin(0.5)
+                .setInteractive()
+                .on('pointerdown', () => handleOptionClick.call(this, index))
+                .on('pointerover', () => optionButton.setStyle({ backgroundColor: '#0056b3' }))
+                .on('pointerout', () => optionButton.setStyle({ backgroundColor: '#007BFF' }));
+                
+                this.textGroup.add(optionButton);
+            });
+        }
+
+        function handleOptionClick(selectedIndex) {
+            const questionData = questions[currentQuestionIndex];
+
+            if (selectedIndex === questionData.correct) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion.call(this);
+            } else {
+                displayResult.call(this);
+            }
+        }
+
+        function displayResult() {
+            // Clear previous question
+            this.textGroup.clear(true, true);
+
+            // Display result message
+            let message = `You scored ${score} out of ${questions.length}!\n`;
+
+            if (score === questions.length) {
+                message += "🎉 Congratulations! You've unlocked a discount code: MUMBAI20";
+            }  else {
+                message += "Better luck next time! Brush up on your Mumbai knowledge!";
+            }
+
+            this.add.text(400, 300, message, {
+                fontSize: '24px',
+                color: '#333',
+                align: 'center',
+                wordWrap: { width: 700 }
+            }).setOrigin(0.5);
+        }
+
+        function update() {
+            // Game logic updates (if needed)
+        }
+    </script>
+
+    <div id="credits">
+        Quiz Game about Mumbai | Powered by Phaser.js
+    </div>
+</body>
+</html>
